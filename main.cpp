@@ -1,74 +1,14 @@
 #include <iostream>
-#include <vector>
-#include <set>
-#include <map>
-#include <algorithm>
-#include <math.h>
-#include <unordered_set>
-#include <chrono>
-#include <cassert>
-#include <random>
 #include <fstream>
-
-static const int NAIVE_CONST = 43;
+#include "counter.h"
 
 void print_help() {
     std::cout << "-file <filename> — read arrays from file" << std::endl
-              << "-help — help" << std::endl
+              << "-help — help" << std::endl << std::endl
               << "The expected performance of the arrays:" << std::endl
               << "n m" << std::endl
               << "a_1 a_2 ... a_n" << std::endl
               << "b_1 b_2 ... b_n" << std::endl;
-}
-
-int find(int *a, int size, int b) {
-    for (int *i = a; i < a + size; ++i) {
-        if (*i == b) {
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-int naive_solve(int *a, size_t n, int *b, size_t m) {
-    int res = 0;
-    for (int i = 0; i < m; ++i) {
-        res += find(a, n, b[i]);
-        if (res == n) {
-            break;
-        }
-    }
-
-    return res;
-}
-
-int set_solve(int *a, size_t n, int *b, size_t m) {
-    std::unordered_set<int> ans;
-    for (int i = 0; i < n; ++i) {
-        ans.insert(a[i]);
-    }
-
-    int res = 0;
-    for (int i = 0; i < m; ++i) {
-        res += ans.count(b[i]);
-        if (res == m) {
-            break;
-        }
-    }
-
-    return res;
-}
-
-int solve(int *a, size_t n, int *b, size_t m) {
-    int ans;
-    if (m < NAIVE_CONST) {
-        ans = naive_solve(a, n, b, m);
-    } else {
-        ans = set_solve(a, n, b, m);
-    }
-
-    return ans;
 }
 
 int *read_array(int n) {
@@ -92,7 +32,7 @@ int *read_array_from_file(int n, std::ifstream &in) {
 int main(int argc, char **argv) {
 
     if (argc > 3) {
-        std::cerr << "Wrong count of arguments, use help";
+        std::cerr << "Wrong count of arguments, use help" << std::endl;
     }
 
 
@@ -101,7 +41,7 @@ int main(int argc, char **argv) {
             print_help();
             return EXIT_SUCCESS;
         } else {
-            std::cerr << "Wrong argument, use help";
+            std::cerr << "Wrong argument, use help" << std::endl;
             return EXIT_FAILURE;
         }
     }
@@ -119,7 +59,7 @@ int main(int argc, char **argv) {
             a = read_array_from_file(n, in);
             b = read_array_from_file(m, in);
         } else {
-            std::cerr << "Wrong argument, use help";
+            std::cerr << "Wrong argument, use help" << std::endl;
             return EXIT_FAILURE;
         }
     } else {
@@ -133,12 +73,9 @@ int main(int argc, char **argv) {
     std::cout.tie(nullptr);
 
     std::cout << "Read finished" << std::endl;
-    if (m < n) {
-        std::swap(n, m);
-        std::swap(a, b);
-    }
 
-    std::cout << solve(a, n, b, m) << std::endl;
+    int ans = Counter::solve(a, n, b, m);
+    std::cout << "Number of equal elements: " << ans << std::endl;
     delete[] a;
     delete[] b;
     return 0;
