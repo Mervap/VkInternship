@@ -32,6 +32,7 @@ int naive_solve(const int *a, size_t n, const int *b, size_t m) {
 
 int set_solve(const int *a, size_t n, const int *b, size_t m) {
     std::unordered_set<int> ans;
+    ans.reserve(n);
     for (int i = 0; i < n; ++i) {
         ans.insert(a[i]);
     }
